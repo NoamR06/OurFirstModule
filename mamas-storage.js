@@ -156,3 +156,8 @@ export class InMemorySharedStorage{
         return data_to_remove;
     }
 }
+
+module.exports = {
+    InMemoryStorage,
+    InMemorySharedStorage
+};
