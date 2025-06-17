@@ -91,7 +91,7 @@ export class InMemorySharedStorage{
             }
             else{
                 data_to_save.push(item)
-            }
+            }   
         });
         this.data_saver = data_to_save;
         return data_to_remove;
