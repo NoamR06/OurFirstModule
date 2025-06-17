@@ -1,4 +1,5 @@
 const _ = require('lodash');
+import { v4 as uuidv4 } from 'uuid';
 
 export class InMemoryStorage{
     constructor(){
@@ -7,7 +8,7 @@ export class InMemoryStorage{
 
     create(collectionName, item){
         let newObject = item;
-        const generated_uuid = crypto.randomUUID();
+        const generated_uuid = uuidv4();
         newObject._uid = generated_uuid;
         data_saver[collectionName].push(newObject);
         return newObject;
@@ -71,16 +72,38 @@ export class InMemorySharedStorage{
         });
         return data_to_return;
     }
+    #isEqual(obj1, obj2){
+        if (obj1 === obj2)
+            return true;
+
+        if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null)
+            return false;
+
+        const obj1_keys = Object.keys(obj1);
+        const obj2_keys2 = Object.keys(obj2);
+
+        if (keys1.length !== keys2.length)
+            return false
+
+        for (let key of keys1) {
+            if (!obj2.hasOwnProperty(key) || !isEqual(obj1[key], obj2[key]))
+                return false;
+        }
+
+         return true;
+    }
+
     where(collectionName, where){
         let collection = this.data_saver;
         let data_to_return = [];
         collection.forEach(item => {
-            if (_.isEqual(item, where)){
+            if (this.#isEqual(item, where)){
                 data_to_return.push(item);
             }
         });
         return data_to_return;
     }
+
     remove(collectionName, findFunc){
         let collection = this.data_saver;
         let data_to_remove = [];
